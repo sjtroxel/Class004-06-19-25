@@ -1,5 +1,6 @@
 require_relative 'scraper.rb'
 require_relative 'country.rb'
+require_relative 'state.rb'
 
 class CLI
   # run
@@ -35,6 +36,7 @@ class CLI
       puts "1. List all states!"
       puts "2. List top 10 states with the most confirmed Covid cases!"
       puts "3. Print USA information!"
+      puts "4. List top 10 states with the most overall Covid deaths!"
       puts "Exit the program by entering 'exit'!"
     end
 
@@ -42,8 +44,19 @@ class CLI
       case option
       when "1"
         puts "Listing all states..."
+        State.all.each do |state|
+          puts "---------"
+          puts "Name: #{state.name}"
+          puts "Cases: #{state.confirmed_cases}"
+          puts "Deaths: #{state.overall_deaths}"
+          puts "Recoveries: #{state.recoveries}"
+          puts "---------"
+        end
       when "2"
         puts "Listing top 10 states with the most confirmed Covid cases..."
+        State.all[0..9].each_with_index do |state, i|
+          puts "#{i+1}. #{state.name} - #{state.confirmed_cases}"
+        end
       when "3"
         puts "Printing USA information..."
         country = Country.first
@@ -51,6 +64,15 @@ class CLI
         puts country.confirmed_cases
         puts country.overall_deaths
         puts country.recoveries
-      end
+      
+      when "4"
+        puts "Listing top 10 states with the most overall Covid deaths..."
+
+        sort_states = State.all.sort_by {|state| state.overall_deaths.gsub(/,/, '').to_i}
+
+        sort_states[0..9].each_with_index do |state, i|
+          puts "#{i+1}. #{state.name} - #{state.overall_deaths}"
+        end
     end
+end
 end

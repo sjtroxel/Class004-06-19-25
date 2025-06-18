@@ -2,6 +2,7 @@ require "nokogiri"
 require "open-uri"
 require "byebug"
 require_relative 'country.rb'
+require_relative 'state.rb'
 
 module Scraper
   URL = "https://www.worldometers.info/coronavirus/country/us/"
@@ -17,8 +18,19 @@ module Scraper
     end
 
   # extract states info from page
-    def self.extract_states_data
+    def self.extract_states_data(doc)
+      states_table = doc.css('tbody tr')
 
+      states_table[1..51].each do |row|
+        name = row.css('td')[1].text.strip
+        cases = row.css('td')[2].text.strip
+        deaths = row.css('td')[3].text.strip
+        recoveries = row.css('td')[4].text.strip
+
+        if(name != 'District Of Columbia')
+          State.new(name, cases, deaths, recoveries)
+        end
+      end
     end
 
   # scrape data
@@ -27,5 +39,6 @@ module Scraper
       unparsed_page = URI.open(URL)
       doc = Nokogiri::HTML(unparsed_page)
       extract_usa_data(doc)
+      extract_states_data(doc)
     end
 end
