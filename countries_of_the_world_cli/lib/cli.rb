@@ -3,6 +3,7 @@ require_relative "user.rb"
 
 class CLI
   def start
+    User.load_users_from_file
     Scraper.scrape_countries
     puts 'Welcome to the Countries of the World CLI!'
     authenticate
@@ -35,6 +36,7 @@ class CLI
         authenticated = login
       else
         create_account
+        authenicated = true
       end
     end
   end
@@ -63,7 +65,7 @@ class CLI
     puts 'Please enter a password:'
     password = gets.chomp
 
-    User.new(username, password)
+    user = User.new(username, password, false)
     puts 'Account created'
   end
 end
