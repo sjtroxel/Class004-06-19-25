@@ -1,7 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bcrypt (3.1.20)
     bigdecimal (3.2.2)
+    byebug (12.0.0)
     csv (3.3.5)
     diff-lcs (1.6.2)
     httparty (0.23.1)
@@ -32,6 +34,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bcrypt
+  byebug
   httparty
   nokogiri
   rspec

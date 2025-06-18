@@ -6,3 +6,5 @@ ruby '3.4.4'
 gem "rspec"
 gem "nokogiri"
 gem "httparty"
+gem "byebug"
+gem "bcrypt"
