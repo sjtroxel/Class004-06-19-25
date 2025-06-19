@@ -6,11 +6,11 @@ class User
 
   @@users = []
 
-  def initialize(username, password)
+  def initialize(username, password, existing_hash = false)
     @username = username
-    @password = BCrypt::Password.create(password)
-      # add the user to an external file
-    User.store_credentials(self)
+    @password = existing_hash ? BCrypt::Password.new(password) :
+      BCrypt::Password.create(password)
+    
     @@users << self
   end
 
@@ -50,5 +50,22 @@ class User
 
     File.open(file_path, "w") { |file| file.write(JSON.generate(users_data)) }
 
+  end
+
+  def self.load_users_from_file
+   
+    file_path = 'users.json'
+      
+      if File.exist?(file_path)
+      # Step 1: Parse data from file
+        file = File.read(file_path)
+
+        users_data = JSON.parse(file)
+      # Step 2: Iterate and create user instances from array of hashes
+
+        users_data.each do |user_data|
+          User.new(user_data['username'], user_data['password'], true)
+        end
+    end
   end
 end

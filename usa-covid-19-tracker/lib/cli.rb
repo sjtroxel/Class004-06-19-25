@@ -6,6 +6,7 @@ require_relative 'user.rb'
 class CLI
   # run
     def run
+      User.load_users_from_file
       authenticate 
       Scraper.scrape_data
       greeting
@@ -123,7 +124,11 @@ end
     puts "Please enter your password!"
     password = gets.chomp
 
-    User.new(username, password)
+    user = User.new(username, password)
+
+      # add the user to an external file
+      User.store_credentials(user)
+
     puts "Account created!!"
   end
 end
